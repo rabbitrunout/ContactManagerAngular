@@ -2,7 +2,7 @@
     require 'connect.php';
 
     $contacts = [];
-    $sql = "SELECT contactID, firstName, emailAddress, phone, status, dob, imageName, typeID FROM contacts";
+    $sql = "SELECT contactID, firstName, lastName, emailAddress, phone, status, dob, imageName, typeID FROM contacts";
 
     if ($result = mysqli_query($con, $sql))
     {

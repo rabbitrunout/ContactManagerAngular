@@ -17,10 +17,20 @@ import { ChangeDetectorRef } from '@angular/core';
 export class Contacts implements OnInit {
   title = 'ContactManager';
   public contacts: Contact[] = [];
-  contact: Contact = {firstName:'', lastName:'', emailAddress:'', phone:'', status:'', dob:'', imageName:'', typeID: 0};
+  contact: Contact = {
+    firstName:'', 
+    lastName:'', 
+    emailAddress:'', 
+    phone:'', 
+    status:'', 
+    dob:'', 
+    imageName:'', 
+    typeID: 0};
 
   error = '';
   success = '';
+
+  selectedFile: File | null = null;
 
   constructor(private contactService: ContactService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
@@ -33,8 +43,8 @@ export class Contacts implements OnInit {
       (data: Contact[]) => {
         this.contacts = data;
         this.success = 'successful list retrieval';
-        console.log('successful list retrieval');
-        console.log(this.contacts);
+        // console.log('successful list retrieval');
+        // console.log(this.contacts);
         this.cdr.detectChanges(); // <--- force UI update
       },
       (err) => {
@@ -42,6 +52,20 @@ export class Contacts implements OnInit {
         this.error = 'error retrieving contacts';
       }
     );
+  }
+
+  addContact(f: NgForm) {
+
+  }
+
+  onFileSelected(event: Event): void
+  {
+    const input = event.target as HTMLInputElement;
+    if(input.files && input.files.length> 0)
+    {
+      this.selectedFile = input.files[0];
+    }
+
   }
 
   resetAlerts(): void {
