@@ -58,26 +58,56 @@ export class Contacts implements OnInit {
         this.success = 'Successfully created';
 
         f.reset();
-        this.selectedFile = null;
       },
       (err) =>  (this.error = err.message)
     );
   }
 
-  editContact(firstName: any, lastName: any, emailAddress: any, phone: any, status: any, dob: any, imageName: any, typeID: any, contactID: any)
+  editContact(firstName: any, lastName: any, emailAddress: any, phone: any, contactID: any)
   {
+    this.resetAlerts();
 
+    console.log(firstName.value);
+    console.log(lastName.value);
+    console.log(emailAddress.value);
+    console.log(phone.value);
+    console.log(+contactID);
+    
+
+    this.contactService.edit({firstName: firstName.value, lastName: lastName.value, emailAddress: emailAddress.value, phone: phone.value, contactID: +contactID})
+      .subscribe(
+        (res) => {
+          this.cdr.detectChanges(); // <--- force UI update
+          this.success = 'Successfully edited';
+        },
+        (err) => (
+          this.error = err. message
+        )
+      );
   }
 
   deleteContact(contactID: number)
   {
-    
+    this.resetAlerts();
+
+    this.contactService.delete(contactID)
+      .subscribe(
+        (res) => {
+          this.contacts = this.contacts.filter( function (item) {
+            return item['contactID'] && +item['contactID'] !== +contactID;
+          });
+          this.cdr.detectChanges(); // <--- force UI update
+          this.success = "Deleted successfully";
+        },
+          (err) => (
+            this.error = err.message
+          )
+      );
   }
 
-  uploadFile(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (!this.selectedFile) {
-      resolve(); // ничего не загружаем — продолжаем
+  uploadFile(): void {
+    if (!this.selectedFile)
+    {
       return;
     }
 
@@ -85,19 +115,10 @@ export class Contacts implements OnInit {
     formData.append('image', this.selectedFile);
 
     this.http.post('http://localhost/contactmanagerangular/contactapi/upload', formData).subscribe(
-      (response: any) => {
-        console.log('File uploaded successfully:', response);
-        this.contact.imageName = response.fileName; // сохраняем имя файла
-        resolve();
-      },
-      error => {
-        console.error('File upload failed:', error);
-        reject(error);
-      }
+      response => console.log('File uploaded successfully:', response),
+      error => console.error('File upload failed:', error)
     );
-  });
-}
-
+  }
 
   onFileSelected(event: Event): void
   {

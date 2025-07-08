@@ -35,7 +35,9 @@ export class ContactService {
 
     edit(contact: Contact)
     {
-        return this.http.put(`${this.baseUrl}/edit`, {data: contact});
+         return this.http.put(`${this.baseUrl}/edit`, {data: contact});
+       
+
     }
 
     delete(contactID: any)
