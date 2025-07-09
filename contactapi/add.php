@@ -28,7 +28,13 @@
         $imageName = mysqli_real_escape_string($con, trim($request->data->imageName));
 
         $origimg = str_replace('\\', '/', $imageName);
+        
         $new = basename($origimg);
+
+        // Add this check:
+        if (empty($new)) {
+            $new = 'placeholder_100.jpg';
+        }
 
         // Store the data
         $sql = "INSERT INTO `contacts`(`contactID`,`firstName`,`lastName`, `emailAddress`, `phone`, `status`, `dob`, `imageName`) VALUES (null,'{$firstName}','{$lastName}','{$emailAddress}','{$phone}','{$status}','{$dob}', '{$new}')";
