@@ -35,14 +35,13 @@ export class ContactService {
 
     edit(contact: Contact)
     {
-         return this.http.put(`${this.baseUrl}/edit`, {data: contact});
-       
-
+        return this.http.put(`${this.baseUrl}/edit`, {data: contact});
     }
 
     delete(contactID: any)
     {
         const params = new HttpParams().set('contactID', contactID.toString());
-        return this.http.delete(`${this.baseUrl}/delete`, {params: params});
+        return this.http.get(`${this.baseUrl}/delete`, {params: params});
+        //return this.http.delete(`${this.baseUrl}/delete`, {params: params});
     }
 }

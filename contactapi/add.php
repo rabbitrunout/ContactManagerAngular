@@ -28,7 +28,6 @@
         $imageName = mysqli_real_escape_string($con, trim($request->data->imageName));
 
         $origimg = str_replace('\\', '/', $imageName);
-        
         $new = basename($origimg);
 
         // Add this check:
