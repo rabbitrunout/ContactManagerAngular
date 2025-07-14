@@ -16,6 +16,7 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class Addcontacts {
   contact: Contact = {firstName:'', lastName:'', emailAddress:'', phone:'', status:'', dob:'', imageName:'', typeID: 0};
+  
   selectedFile: File | null = null;
   error = '';
   success = '';

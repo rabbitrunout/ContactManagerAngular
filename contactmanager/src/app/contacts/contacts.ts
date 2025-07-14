@@ -65,9 +65,9 @@ export class Contacts implements OnInit {
       this.selectedFile = null; // Clear file selection
     },
     (err) => (this.error = err.message)
-
   );
 }
+
 
   editContact(firstName: any, lastName: any, emailAddress: any, phone: any, contactID: any)
   {
