@@ -14,40 +14,62 @@ import { RouterModule, Router } from '@angular/router';
   imports: [CommonModule, FormsModule, HttpClientModule, RouterModule],
   providers: [ContactService]
 })
-export class Addcontacts {
-  contact: Contact = {firstName:'', lastName:'', emailAddress:'', phone:'', status:'', dob:'', imageName:'', typeID: 0};
+export class Addcontacts implements OnInit {
+  contact: Contact = {
+    firstName: '', lastName: '', emailAddress: '',
+    phone: '', status: '', dob: '', imageName: '',
+    typeID: 0
+  };
+
   selectedFile: File | null = null;
   error = '';
   success = '';
+  types: { typeID: number, contactType: string }[] = [];
 
-  constructor(private contactService: ContactService, private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private contactService: ContactService,
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  addContact(f: NgForm) {
-  this.resetAlerts();
-
-  if (!this.contact.imageName) {
-    this.contact.imageName = 'placeholder_100.jpg';
+  ngOnInit(): void {
+    this.loadTypes();
   }
 
-  this.contactService.add(this.contact).subscribe(
-    (res: Contact) => {
-      this.success = 'Successfully created';
+  loadTypes(): void {
+    this.http.get<{ typeID: number, contactType: string }[]>('http://localhost/contactmanagerangular/contactapi/types.php')
+      .subscribe({
+        next: (data) => this.types = data,
+        error: () => this.error = 'Failed to load contact types'
+      });
+  }
 
-      // Only upload file AFTER successful contact creation
-      if (this.selectedFile && this.contact.imageName !== 'placeholder_100.jpg') {
-        this.uploadFile();
-      }
+  addContact(f: NgForm) {
+    this.resetAlerts();
 
-      f.reset();
-      this.router.navigate(['/contacts']);
-    },
-    (err) => {
-      this.error = err.error?.message || err.message || 'Error occurred';
-      this.cdr.detectChanges();
+    if (!this.contact.imageName) {
+      this.contact.imageName = 'placeholder_100.jpg';
     }
-  );
-}
 
+    this.contactService.add(this.contact).subscribe(
+      (res: Contact) => {
+        this.success = 'Successfully created';
+
+        if (this.selectedFile && this.contact.imageName !== 'placeholder_100.jpg') {
+          this.uploadFile();
+          this.cdr.detectChanges();
+        }
+
+        f.reset();
+        this.router.navigate(['/contacts']);
+      },
+      (err) => {
+        this.error = err.error?.message || err.message || 'Error occurred';
+        this.cdr.detectChanges();
+      }
+    );
+  }
 
   uploadFile(): void {
     if (!this.selectedFile) return;
@@ -65,7 +87,7 @@ export class Addcontacts {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      this.contact.imageName = this.selectedFile.name;      
+      this.contact.imageName = this.selectedFile.name;
     }
   }
 
