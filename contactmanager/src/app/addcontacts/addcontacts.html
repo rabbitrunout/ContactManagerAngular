@@ -3,16 +3,16 @@
     <h2>{{ userName }}'s Add Contact</h2>
     <button (click)="authService.logout()" class="btn btn-sm btn-danger">Logout</button>
   </div>
+
   <form #f="ngForm" (ngSubmit)="addContact(f)">
-    
     <div class="form-group">
       <label>First Name</label>
-      <input type="text" name="firstName" class="form-control" [(ngModel)]="contact.firstName" required>
+      <input type="text" name="firstName" class="form-control" [(ngModel)]="contact.firstName" required />
     </div>
 
     <div class="form-group">
       <label>Last Name</label>
-      <input type="text" name="lastName" class="form-control" [(ngModel)]="contact.lastName" required>
+      <input type="text" name="lastName" class="form-control" [(ngModel)]="contact.lastName" required />
     </div>
 
     <div class="form-group">
@@ -22,12 +22,20 @@
 
     <div class="form-group">
       <label>Phone Number</label>
-      <input type="tel" name="phone" [(ngModel)]="contact.phone" class="form-control" required pattern="^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$" />
+      <input
+        type="tel"
+        name="phone"
+        [(ngModel)]="contact.phone"
+        class="form-control"
+        required
+        pattern="^[0-9\-\(\)\s]{7,20}$"
+      />
     </div>
 
     <div class="form-group">
       <label>Status</label>
       <select name="status" class="form-control" [(ngModel)]="contact.status" required>
+        <option value="" disabled>Select status</option>
         <option value="member">Member</option>
         <option value="nonmember">NonMember</option>
       </select>
@@ -35,29 +43,48 @@
 
     <div class="form-group">
       <label>Date of Birth</label>
-      <input type="date" name="dob" [(ngModel)]="contact.dob" class="form-control" [max]="maxDate" required />
+      <input
+        type="date"
+        name="dob"
+        [(ngModel)]="contact.dob"
+        class="form-control"
+        [max]="maxDate"
+        required
+      />
     </div>
 
     <div class="form-group">
       <label>Upload Image</label>
-      <input type="file" class="form-control" name="image" (change)="onFileSelected($event)" />
+      <input
+        type="file"
+        class="form-control"
+        name="image"
+        (change)="onFileSelected($event)"
+      />
     </div>
 
     <div class="form-group">
       <label for="typeID">Contact Type</label>
-      <select id="typeID" name="typeID" class="form-control" [(ngModel)]="contact.typeID" required>
-        <option value="" disabled selected>Select a contact type</option>
+      <select
+        id="typeID"
+        name="typeID"
+        class="form-control"
+        [(ngModel)]="contact.typeID"
+        required
+      >
+        <option value="" disabled>Select a contact type</option>
         <option *ngFor="let t of types" [value]="t.typeID">{{ t.contactType }}</option>
       </select>
     </div>
-
 
     <button type="submit" class="btn btn-primary mr-2" [disabled]="f.invalid">Add Contact</button>
     <button class="btn btn-secondary" routerLink="/contacts">Cancel</button>
 
     <div *ngIf="success" class="alert alert-success mt-3">{{ success }}</div>
     <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-    
+
+    <!-- Отладка формы -->
+    <pre class="mt-3 text-muted small">Form valid: {{ f.valid }} | invalid: {{ f.invalid }}</pre>
   </form>
 </div>
 
@@ -66,3 +93,5 @@
     Back to Contact Manager
   </button>
 </div>
+
+

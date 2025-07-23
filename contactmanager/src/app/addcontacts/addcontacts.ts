@@ -16,11 +16,16 @@ import { Auth } from '../services/auth';
   providers: [ContactService]
 })
 export class Addcontacts implements OnInit {
-  contact: Contact = {
-    firstName: '', lastName: '', emailAddress: '',
-    phone: '', status: '', dob: '', imageName: '',
-    typeID: 0
-  };
+ contact: Contact = {
+  firstName: '',
+  lastName: '',
+  emailAddress: '',
+  phone: '',
+  status: '',
+  dob: '',
+  imageName: '',
+  typeID: '' as any  // пустая строка, чтобы не блокировала select
+};
 
   selectedFile: File | null = null;
   error = '';
